@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Storage Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #toolbar {
+            display: flex;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toolbar-button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .toolbar-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        #content {
+            display: flex;
+            flex: 1;
+        }
+
+        #sidebar {
+            width: 300px;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #tabs {
+            display: flex;
+            background-color: #ddd;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            border-right: 1px solid #ccc;
+        }
+
+        .tab.active {
+            background-color: white;
+            font-weight: bold;
+        }
+
+        #editor {
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        .folder, .file {
+            cursor: pointer;
+            margin: 5px 0;
+            padding: 5px;
+        }
+
+        .folder:hover, .file:hover {
+            background-color: #e0e0e0;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button class="toolbar-button">Создать Папку</button>
+        <button class="toolbar-button">Удалить Папку</button>
+        <button class="toolbar-button">Загрузить Файл</button>
+        <button class="toolbar-button">Скачать Файл</button>
+        <button class="toolbar-button">Удалить Файл</button>
+        <button class="toolbar-button">Переименовать</button>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+            <h3>Project Structure</h3>
+            <div class="folder">Project_1
+                <div class="file">MainWindow.cs</div>
+                <div class="file">MainWindow.xaml</div>
+                <div class="file">App.xaml</div>
+            </div>
+        </div>
+
+        <div id="main-content">
+            <div id="tabs">
+                <div class="tab active">MainWindow.cs</div>
+            </div>
+            <div id="editor">
+                <pre>// Code will be displayed here</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip">Description</div>
+
+    <script>
+        // JavaScript for handling dynamic interaction will go here
+    </script>
+</body>
+</html>
