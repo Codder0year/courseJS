@@ -16,17 +16,28 @@ function loadChildren(element) {
   newChildContainer.className = "children";
 
   children.forEach((child) => {
-    let childElement = document.createElement("div");
+    const childElement = document.createElement("div");
     childElement.textContent = child;
     childElement.className = child.includes(".") ? "file" : "folder";
 
+    // Добавляем обработчик для файлов (открытие файлов)
+    if (child.includes(".")) {
+      childElement.addEventListener("click", (event) => {
+        event.stopPropagation(); // Останавливаем распространение события
+        openFile(child); // Открываем файл при клике
+      });
+    }
+
     // Добавляем обработчик для вложенных папок
     if (!child.includes(".")) {
-      childElement.onclick = function (event) {
-        event.stopPropagation(); // Останавливаем распространение события, чтобы не закрыть родительскую папку
-        loadChildren(this); // Загружаем дочерние элементы при клике
-      };
+      childElement.addEventListener("click", (event) => {
+        event.stopPropagation(); // Останавливаем распространение события
+        loadChildren(childElement); // Загружаем дочерние элементы при клике
+      });
     }
+
+    // Привязываем обработчики для описаний
+    attachDescriptionEvents(childElement, child);
 
     newChildContainer.appendChild(childElement);
   });
@@ -37,8 +48,8 @@ function loadChildren(element) {
   attachDescriptionEventListeners();
 }
 
-// Функция для привязки событий на элементы для показа описания
-function attachDescriptionEventListeners() {
+// Привязываем обработчики для описания элемента
+function attachDescriptionEvents(element, name) {
   const tooltip = document.getElementById("tooltip");
 
   // Описание для каждого файла и папки
@@ -99,6 +110,8 @@ function attachDescriptionEventListeners() {
 
 // Инициализация обработчиков описания после загрузки страницы
 document.addEventListener("DOMContentLoaded", () => {
-  // Привязываем обработчики описаний ко всем файлам и папкам
-  attachDescriptionEventListeners();
+  const rootFolder = document.querySelector(".folder");
+  if (rootFolder) {
+    attachDescriptionEvents(rootFolder, "Project_1");
+  }
 });
