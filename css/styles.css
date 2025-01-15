@@ -111,19 +111,4 @@ body {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: none; /* По умолчанию скрыта */
-}
-
-.save-button:disabled {
-    background-color: #9E9E9E;
-    cursor: not-allowed;
-}
-
-.save-button:hover:not(:disabled) {
-    background-color: #45a049;
 }

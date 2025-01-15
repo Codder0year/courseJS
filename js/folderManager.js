@@ -1,14 +1,3 @@
-// Функция для проверки уникальности имени папки
-function isFolderNameUnique(folderName) {
-    const existingFolders = document.querySelectorAll(".folder");
-    for (let folder of existingFolders) {
-      if (folder.textContent.trim() === folderName) {
-        return false; // Если папка с таким именем уже существует
-      }
-    }
-    return true; // Имя уникально
-  }
-  
   // Функция для создания новой папки
   function createFolder() {
     let folderName = prompt("Введите имя новой папки:", "Новая папка");
@@ -35,11 +24,11 @@ function isFolderNameUnique(folderName) {
       const root = document.getElementById("sidebar"); // или любой другой контейнер, куда добавлять
   
       // Если у родителя есть дочерние элементы, вставляем папку внутрь них
-      const childrenContainer = root.querySelector(".children") || document.createElement("div");
-      childrenContainer.className = "children";
-      childrenContainer.appendChild(newFolder);
-      root.appendChild(childrenContainer);
-  
+        const childrenContainer = root.querySelector(".children") || document.createElement("div");
+        childrenContainer.className = "children";
+        childrenContainer.appendChild(newFolder);
+        root.appendChild(childrenContainer);
+
       alert(`Папка "${folderName}" успешно создана!`);
     }
   }
@@ -52,7 +41,3 @@ function isFolderNameUnique(folderName) {
     });
   }
   
-  // Инициализация при загрузке страницы
-  document.addEventListener("DOMContentLoaded", () => {
-    setupFolderCreation();
-  });

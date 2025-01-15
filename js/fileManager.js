@@ -1,11 +1,3 @@
-// Содержимое файлов
-const fileContent = {
-  "File1.cs": "// C# file content",
-  "File2.xaml": "<!-- XAML content -->",
-  "MainWindow.cs": "// MainWindow.cs content",
-  "MainWindow.xaml": "<!-- MainWindow.xaml content -->",
-};
-
 // Текущий открытый файл
 let currentFile = null;
 
