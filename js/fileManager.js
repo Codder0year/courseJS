@@ -1,25 +1,46 @@
-// Функция для открытия файла в редакторе
+// Содержимое файлов
+const fileContent = {
+  "File1.cs": "// C# file content",
+  "File2.xaml": "<!-- XAML content -->",
+  "MainWindow.cs": "// MainWindow.cs content",
+  "MainWindow.xaml": "<!-- MainWindow.xaml content -->",
+};
+
+// Текущий открытый файл
+let currentFile = null;
+
+// Открытие файла для редактирования
 function openFile(fileName) {
   const editor = document.getElementById("editor");
-
-  // Контент файлов
-  const fileContent = {
-    "File1.cs": "// C# file content",
-    "File2.xaml": "<!-- XAML content -->",
-    "MainWindow.cs": "// MainWindow.cs content",
-    "MainWindow.xaml": "<!-- MainWindow.xaml content -->",
-  };
+  const saveButton = document.getElementById("save-button");
 
   if (fileContent[fileName]) {
-    editor.textContent = fileContent[fileName];
+    currentFile = fileName;
+    editor.value = fileContent[fileName]; // Загружаем содержимое файла
+    editor.style.display = "block"; // Показываем редактор
+    saveButton.removeAttribute("disabled");
+    saveButton.style.display = "block"; // Показываем кнопку "Сохранить"
   } else {
-    editor.textContent = "// Content not found";
+    currentFile = null;
+    editor.value = "";
+    editor.style.display = "none"; // Скрываем редактор
+    saveButton.setAttribute("disabled", "true");
+    saveButton.style.display = "none"; // Скрываем кнопку "Сохранить"
   }
 
   addTab(fileName);
 }
 
-// Функция для добавления вкладки
+// Сохранение изменений в файл
+function saveFileContent() {
+  if (currentFile) {
+    const editor = document.getElementById("editor");
+    fileContent[currentFile] = editor.value; // Сохраняем изменения
+    alert(`Изменения в файле "${currentFile}" сохранены!`);
+  }
+}
+
+// Добавление вкладки
 function addTab(fileName) {
   const tabs = document.getElementById("tabs");
 
@@ -40,6 +61,7 @@ function addTab(fileName) {
       event.stopPropagation();
       closeTab(newTab);
     };
+
     newTab.appendChild(closeButton);
 
     tabs.appendChild(newTab);
@@ -50,7 +72,7 @@ function addTab(fileName) {
   }
 }
 
-// Функция для закрытия вкладки
+// Закрытие вкладки
 function closeTab(tab) {
   const tabs = document.getElementById("tabs");
   tabs.removeChild(tab);
@@ -59,18 +81,23 @@ function closeTab(tab) {
   if (tab.classList.contains("active")) {
     const remainingTabs = Array.from(tabs.children);
     if (remainingTabs.length > 0) {
-      remainingTabs[0].classList.add("active");
-      openFile(remainingTabs[0].textContent.trim());
+      const nextTab = remainingTabs[0];
+      nextTab.classList.add("active");
+      openFile(nextTab.textContent.trim());
     } else {
-      document.getElementById("editor").textContent = "// No file selected";
+      const editor = document.getElementById("editor");
+      const saveButton = document.getElementById("save-button");
+      editor.value = "";
+      editor.style.display = "none"; // Скрываем редактор
+      saveButton.setAttribute("disabled", "true");
+      saveButton.style.display = "none"; // Скрываем кнопку "Сохранить"
     }
   }
 }
 
-// Убедитесь, что `editor` и `tabs` существуют в HTML
+// Привязываем события
 document.addEventListener("DOMContentLoaded", () => {
-  const rootFolder = document.querySelector(".folder");
-  if (rootFolder) {
-    attachDescriptionEvents(rootFolder, "Project_1");
-  }
+  document
+    .getElementById("save-button")
+    .addEventListener("click", saveFileContent);
 });
