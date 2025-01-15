@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => { 
     const createFolderButton = document.getElementById("create-folder-button");
     const deleteFolderButton = document.getElementById("delete-folder-button");
+    const uploadFileButton = document.getElementById("upload-file-button");
     const deleteFileButton = document.getElementById("delete-file-button");
     const saveButton = document.getElementById("save-button");
     const editor = document.getElementById("editor");
+    const inputFile = document.getElementById("input-file");
     let selectedFolder = null;
     let selectedFile = null;
 
@@ -99,29 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Удаление файла из структуры
-    function deleteFile(structure, folderPath, fileName) {
-        const parts = folderPath.split("/");
-        let parent = structure;
-
-        // Идем по пути папки, чтобы добраться до нужной папки
-        for (const part of parts) {
-            if (parent[part]) {
-                parent = parent[part].folders || parent[part];  // Переходим в папки
-            }
-        }
-
-        if (parent && parent[folderPath] && parent[folderPath].files) {
-            const fileIndex = parent[folderPath].files.indexOf(fileName);
-            if (fileIndex !== -1) {
-                parent[folderPath].files.splice(fileIndex, 1);  // Удаляем файл из массива
-                saveProjectStructure();  // Сохраняем изменения
-                updateFolderStructure();  // Обновляем структуру
-                selectedFile = null;  // Сбрасываем выбранный файл
-            }
-        }
-    }
-
     // Создание папки
     createFolderButton.addEventListener("click", () => {
         const folderName = prompt("Введите название новой папки:");
@@ -168,16 +147,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Удаление файла
-    deleteFileButton.addEventListener("click", () => {
-        if (selectedFolder && selectedFile) {
-            const confirmDelete = confirm(`Удалить файл "${selectedFile}"?`);
-            if (confirmDelete) {
-                deleteFile(projectStructure, selectedFolder.name, selectedFile);
-            }
+    // Добавление файла
+    uploadFileButton.addEventListener("click", () => {
+        if (selectedFolder) {
+            inputFile.click();
         } else {
-            alert("Выберите файл для удаления.");
+            alert("Выберите папку для загрузки файла.");
         }
+    });
+
+    inputFile.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file || !selectedFolder) {
+            alert("Выберите файл для загрузки и папку.");
+            return;
+        }
+    
+        const pathParts = selectedFolder.name.split("/");
+        let current = projectStructure;
+    
+        // Проходим по каждому уровню пути и проверяем существование выбранной папки
+        for (const part of pathParts) {
+            if (!current[part]) {
+                alert(`Путь "${selectedFolder.name}" некорректен. Папка "${part}" отсутствует.`);
+                return;
+            }
+            current = current[part]?.folders || current[part]; // Переходим в текущую папку
+        }
+    
+        // Просто добавляем файл в текущую папку
+        // Прямо добавляем имя файла в папку без создания массива или каких-либо дополнительных структур
+        // Например, можно просто добавить файл в текущую папку, если это необходимо
+    
+        current[file.name] = file; // Просто закидываем файл в папку
+    
+        // Сохраняем обновленную структуру
+        saveProjectStructure();
+    
+        // Обновляем отображение структуры
+        updateFolderStructure();
+    
+        alert(`Файл "${file.name}" успешно загружен в папку "${selectedFolder.name}".`);
     });
 
     // Обновление интерфейса при загрузке
