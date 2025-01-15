@@ -1,5 +1,3 @@
-// folder.js
-
 // Создание новой папки
 function createFolder(projectStructure, folderName, selectedFolder) {
     if (selectedFolder) {

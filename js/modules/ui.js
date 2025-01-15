@@ -10,7 +10,6 @@ function updateFolderStructure(projectStructure) {
         Object.keys(structure).forEach(folderName => {
             const fullPath = path ? `${path}/${folderName}` : folderName;
 
-            // Создание элемента для папки
             const folderElement = document.createElement("div");
             folderElement.classList.add("folder");
             folderElement.textContent = folderName;
@@ -35,9 +34,6 @@ function updateFolderStructure(projectStructure) {
                     parentElement.appendChild(fileElement);
                 });
             }
-
-            // Рекурсивно отображаем вложенные папки
-            renderFolder(structure[folderName]?.folders || {}, parentElement, fullPath);
         });
     }
 

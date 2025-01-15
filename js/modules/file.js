@@ -9,9 +9,5 @@ function addFile(projectStructure, selectedFolder, file) {
         current = current[part]?.folders || current[part];
     });
 
-    if (!current.files) {
-        current.files = [];
-    }
-
     current.files.push(file.name);
 }

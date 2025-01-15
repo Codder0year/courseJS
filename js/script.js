@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const editor = document.getElementById("editor");
 
     let selectedFolder = null;
-    let selectedFile = null;
     let projectStructure = loadProjectStructure();
 
     // Функция для выбора папки
@@ -21,14 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.add("selected");
     };
 
-    // Открытие файла
-    function openFile(file) {
-        selectedFile = file;
-        editor.value = `Редактирование файла: ${file}`;
-        saveButton.disabled = false;
-    }
-
-    // Создание папки
     createFolderButton.addEventListener("click", () => {
         const folderName = prompt("Введите название новой папки:");
         if (!folderName) return;
@@ -41,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Удаление папки
     deleteFolderButton.addEventListener("click", () => {
         if (selectedFolder) {
             const confirmDelete = confirm(`Удалить папку "${selectedFolder.name}" и её содержимое?`);
@@ -76,9 +66,5 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProjectStructure(projectStructure);
         updateFolderStructure(projectStructure);
 
-        alert(`Файл "${file.name}" успешно загружен в папку "${selectedFolder.name}".`);
-    });
-
-    // Изначально обновляем структуру папок
-    updateFolderStructure(projectStructure);
+    alert(`Файл "${file.name}" успешно загружен в папку "${selectedFolder.name}".`);
 });
