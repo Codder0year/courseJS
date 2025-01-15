@@ -111,4 +111,127 @@ body {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none; /* По умолчанию скрыта */
+}
+
+.save-button:disabled {
+    background-color: #9E9E9E;
+    cursor: not-allowed;
+}
+
+.save-button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.folder.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Стили для отображения папок и файлов с отступами */
+.folder {
+    margin-left: 20px; /* Отступ для папки */
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.folder:hover {
+    font-weight: bold;
+}
+
+.subfolder {
+    margin-left: 20px; /* Дополнительный отступ для вложенных папок */
+    margin-top: 10px;
+}
+
+.file {
+    margin-left: 40px; /* Отступ для файлов */
+    cursor: pointer;
+}
+
+.folder {
+    cursor: pointer;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.folder:hover {
+    background-color: #e0e0e0;
+}
+
+.folder.open {
+    font-weight: bold;
+}
+
+.files-container {
+    margin-left: 20px;
+}
+
+.file {
+    cursor: pointer;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.file:hover {
+    background-color: #e0e0e0;
+}
+
+#editor-container {
+    margin-top: 20px;
+}
+
+#editor {
+    width: 100%;
+    height: 300px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+#save-button {
+    margin-top: 10px;
+}
+
+
+
+/* Стили для текстового редактора */
+#editor {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none;
+    display: none; /* По умолчанию скрыт */
+}
+
+/* Стили для кнопки "Сохранить" */
+.save-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none; /* По умолчанию скрыта */
+}
+.save-button:disabled {
+    background-color: #9E9E9E;
+    cursor: not-allowed;
+}
+.save-button:hover:not(:disabled) {
+    background-color: #45a049;
 }

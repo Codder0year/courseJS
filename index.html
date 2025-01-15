@@ -8,33 +8,41 @@
 </head>
 <body>
     <div id="toolbar">
-        <button class="toolbar-button">Создать Папку</button>
-        <button class="toolbar-button">Удалить Папку</button>
-        <button class="toolbar-button">Загрузить Файл</button>
+        <button id="create-folder-button" class="toolbar-button">Создать Папку</button>
+        <button id="delete-folder-button" class="toolbar-button">Удалить Папку</button>
+        <button id="upload-file-button" class="toolbar-button">Загрузить Файл</button>
         <button class="toolbar-button">Скачать Файл</button>
-        <button class="toolbar-button">Удалить Файл</button>
+        <button id="delete-file-button" class="toolbar-button">Удалить Файл</button>
         <button class="toolbar-button">Переименовать</button>
     </div>
 
     <div id="content">
+        <!-- Структура папок с левой стороны -->
         <div id="sidebar">
             <h3>Project Structure</h3>
-            <div class="folder" onclick="loadChildren(this)">Project_1</div>
+            <!-- Структура папок будет добавляться динамически -->
         </div>
 
         <div id="main-content">
+            <!-- Вкладки для открытых файлов -->
             <div id="tabs">
                 <!-- Вкладки будут добавляться динамически -->
             </div>
+        
+            <!-- Текстовый редактор для работы с файлами -->
             <textarea id="editor" placeholder="Выберите файл для редактирования"></textarea>
+            <button id="save-button" class="save-button" disabled>Сохранить</button>
         </div>
     </div>
 
+    <!-- Кнопка "Сохранить" для сохранения изменений в редактируемом файле -->
     <button id="save-button" class="save-button" disabled>Сохранить</button>
 
-    <div class="tooltip" id="tooltip">Description</div>
+    <!-- Скрытый элемент для выбора файлов -->
+    <input type="file" id="input-file" style="display:none">
 
     <!-- Подключение JavaScript -->
-    <script src="js/folderManager.js"></script>
+    <script src="js/scripts.js"></script>
 </body>
 </html>
+
