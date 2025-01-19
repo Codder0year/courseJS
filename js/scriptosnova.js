@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const item = structure[name];
 
                 if (typeof item === "object" && !item.content) {
-                    // Render folder
                     const folderElement = document.createElement("div");
                     folderElement.classList.add("folder");
                     folderElement.textContent = name;
@@ -127,85 +126,3 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("Выберите папку для удаления.");
         }
     });
-
-    uploadFileButton.addEventListener("click", () => {
-        if (selectedFolder) {
-            inputFile.click();
-        } else {
-            alert("Выберите папку для загрузки файла.");
-        }
-    });
-
-    inputFile.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (!file || !selectedFolder) {
-            alert("Выберите файл для загрузки и папку.");
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-            let current = projectStructure;
-            const pathParts = selectedFolder.name.split("/");
-            for (const part of pathParts) {
-                current = current[part];
-            }
-
-            current[file.name] = reader.result;
-            saveProjectStructure();
-            updateFolderStructure();
-            alert(`Файл "${file.name}" успешно загружен в папку "${selectedFolder.name}".`);
-        };
-        reader.readAsText(file);
-    });
-
-    deleteFileButton.addEventListener("click", () => {
-        if (selectedFile) {
-            const { parent, name } = getParentFolder(selectedFile.path);
-            delete parent[name];
-            saveProjectStructure();
-            updateFolderStructure();
-            selectedFile = null;
-            editor.value = "";
-            saveButton.disabled = true;
-            alert("Файл удалён.");
-        } else {
-            alert("Выберите файл для удаления.");
-        }
-    });
-
-    saveButton.addEventListener("click", () => {
-        if (selectedFile) {
-            const { parent, name } = getParentFolder(selectedFile.path);
-            parent[name] = editor.value;
-            saveProjectStructure();
-            alert("Файл сохранён.");
-        }
-    });
-
-    renameButton.addEventListener("click", () => {
-        if (selectedFolder) {
-            const newFolderName = prompt("Введите новое имя папки:", selectedFolder.name.split("/").pop());
-            if (newFolderName) {
-                const { parent, name } = getParentFolder(selectedFolder.name);
-                parent[newFolderName] = parent[name];
-                delete parent[name];
-                saveProjectStructure();
-                updateFolderStructure();
-            }
-        } else if (selectedFile) {
-            const newFileName = prompt("Введите новое имя файла:", selectedFile.path.split("/").pop());
-            if (newFileName) {
-                const { parent, name } = getParentFolder(selectedFile.path);
-                parent[newFileName] = parent[name];
-                delete parent[name];
-                saveProjectStructure();
-                updateFolderStructure();
-            }
-        } else {
-            alert("Выберите файл или папку для переименования.");
-        }
-    });
-
-    updateFolderStructure();
-});
