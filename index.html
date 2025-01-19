@@ -5,23 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Storage Application</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div id="toolbar">
         <button id="create-folder-button" class="toolbar-button">Создать Папку</button>
         <button id="delete-folder-button" class="toolbar-button">Удалить Папку</button>
         <button id="upload-file-button" class="toolbar-button">Загрузить Файл</button>
+        <button id="download-file-button" class="toolbar-button">Скачать файл</button>
         <button id="delete-file-button" class="toolbar-button">Удалить Файл</button>
-        <button id="rename-button" class="toolbar-button">Переименовать</button> <!-- Added ID for rename button -->
+        <button id="rename-button" class="toolbar-button">Переименовать</button>
     </div>
 
     <div id="content">
         <div id="sidebar">
             <h3>Project Structure</h3>
+            <!-- Папки и файлы будут добавляться динамически -->
         </div>
-
         <div id="main-content">
-            <div id="tabs"></div>
+            <div id="file-tabs"></div>
             <textarea id="editor" placeholder="Выберите файл для редактирования"></textarea>
             <button id="save-button" class="save-button" disabled>Сохранить</button>
         </div>
@@ -29,6 +31,6 @@
 
     <input type="file" id="input-file" style="display:none">
 
-    <script src="js/scriptosnova.js"></script> <!-- Reference to the provided JavaScript file -->
+    <script src="scriptts.js"></script>
 </body>
 </html>

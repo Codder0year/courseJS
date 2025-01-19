@@ -49,58 +49,43 @@ body {
     display: flex;
     background-color: #ddd;
     border-bottom: 1px solid #ccc;
+    overflow-x: auto;
 }
 
 .tab {
     padding: 10px;
     cursor: pointer;
-    border-right: 1px solid #ccc;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
 }
 
 .tab.active {
-    background-color: white;
+    border: 2px solid #007bff;
+    background-color: #f4f4f4;
     font-weight: bold;
+}
+
+.tab .close-tab {
+    margin-left: 10px;
+    color: red;
+    cursor: pointer;
 }
 
 #editor {
     flex: 1;
     padding: 10px;
     overflow: auto;
-}
-
-.folder, .file {
-    cursor: pointer;
-    margin: 5px 0;
-    padding: 5px;
-}
-
-.folder:hover, .file:hover {
-    background-color: #e0e0e0;
-}
-
-.tooltip {
-    display: none;
-    position: absolute;
-    background-color: #333;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    z-index: 1000;
-}
-
-/* Стили для текстового редактора */
-#editor {
     width: 100%;
     height: 300px;
-    margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
     font-family: monospace;
     font-size: 14px;
     resize: none;
-    display: none; /* По умолчанию скрыт */
 }
 
 /* Стили для кнопки "Сохранить" */
@@ -116,7 +101,6 @@ body {
     cursor: pointer;
     font-size: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: none; /* По умолчанию скрыта */
 }
 
 .save-button:disabled {
@@ -128,110 +112,90 @@ body {
     background-color: #45a049;
 }
 
+/* Стили для выделенных папок */
 .folder.selected {
-    background-color: #007bff;
-    color: white;
+    background-color: white;  /* Белый фон */
+    color: black;  /* Черный цвет текста */
 }
 
-/* Стили для отображения папок и файлов с отступами */
+/* Стили для отображения папок с иконками */
 .folder {
-    margin-left: 20px; /* Отступ для папки */
+    margin-left: 20px;
     cursor: pointer;
     margin-top: 5px;
-}
-
-.folder:hover {
-    font-weight: bold;
-}
-
-.subfolder {
-    margin-left: 20px; /* Дополнительный отступ для вложенных папок */
-    margin-top: 10px;
-}
-
-.file {
-    margin-left: 40px; /* Отступ для файлов */
-    cursor: pointer;
-}
-
-.folder {
-    cursor: pointer;
-    margin: 5px 0;
     padding: 5px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
 }
 
 .folder:hover {
     background-color: #e0e0e0;
 }
 
-.folder.open {
-    font-weight: bold;
+.folder .folder-icon {
+    margin-right: 10px;
 }
 
-.files-container {
+.subfolder {
     margin-left: 20px;
+    margin-top: 10px;
 }
 
 .file {
+    margin-left: 40px;
     cursor: pointer;
-    margin: 5px 0;
-    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.file .file-icon {
+    margin-right: 10px;
+}
+
+.folder img {
+    width: 20px;  /* Устанавливаем одинаковый размер иконки */
+    height: 20px;
+    margin-right: 5px;  /* Отступ от текста */
 }
 
 .file:hover {
     background-color: #e0e0e0;
 }
 
-#editor-container {
-    margin-top: 20px;
-}
-
-#editor {
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-    font-size: 16px;
-}
-
-#save-button {
-    margin-top: 10px;
-}
-
-
-
-/* Стили для текстового редактора */
-#editor {
-    width: 100%;
-    height: 300px;
-    margin-top: 20px;
+/* Таблицы и стили для файлов */
+.file-tab {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: white;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    font-family: monospace;
-    font-size: 14px;
-    resize: none;
-    display: none; /* По умолчанию скрыт */
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-weight: bold;
+    color: black;
 }
 
-/* Стили для кнопки "Сохранить" */
-.save-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.file-tab.active {
+    border: 2px solid #007bff;
+    background-color: #f4f4f4;
+    color: black;
+}
+
+.close-tab {
+    margin-left: 10px;
     cursor: pointer;
     font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: none; /* По умолчанию скрыта */
+    color: #888;
 }
-.save-button:disabled {
-    background-color: #9E9E9E;
-    cursor: not-allowed;
+
+.file-tab:hover {
+    background-color: #d0d0d0;
 }
-.save-button:hover:not(:disabled) {
-    background-color: #45a049;
+.folder img, .file img {
+    width: 16px;  /* Устанавливаем размер иконки меньше */
+    height: 16px; /* Устанавливаем высоту иконки */
+    margin-right: 5px;  /* Отступ от текста */
+    object-fit: contain; /* Убедимся, что изображение пропорционально масштабируется */
 }
