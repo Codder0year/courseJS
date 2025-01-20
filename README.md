@@ -20,8 +20,9 @@
    ```bash
    git clone <git@github.com:Codder0year/courseJS.git>
 
+![HiRrsA3t5Hs](https://github.com/user-attachments/assets/e6a947f6-7789-4640-99c0-b2b52db212f1)
 
-![Uploading image.png…]()
+
 
 Функционал
 Создание папок: Добавление новой папки в структуру проекта.
