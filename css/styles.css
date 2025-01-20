@@ -125,17 +125,14 @@ body {
     margin-top: 5px;
     padding: 5px;
     background-color: #f4f4f4;
-    border: 1px solid #ccc;
     display: flex;
     align-items: center;
+    border: none; /* Убираем границу */
+    outline: none; /* Убираем обводку фокуса */
 }
 
 .folder:hover {
     background-color: #e0e0e0;
-}
-
-.folder .folder-icon {
-    margin-right: 10px;
 }
 
 .subfolder {
@@ -154,10 +151,12 @@ body {
     margin-right: 10px;
 }
 
-.folder img {
-    width: 20px;  /* Устанавливаем одинаковый размер иконки */
-    height: 20px;
+/* Иконки для папок и файлов */
+.folder img, .file img {
+    width: 16px;  /* Устанавливаем размер иконки для папок и файлов */
+    height: 16px; /* Устанавливаем высоту иконки */
     margin-right: 5px;  /* Отступ от текста */
+    object-fit: contain; /* Убедимся, что изображение пропорционально масштабируется */
 }
 
 .file:hover {
@@ -192,10 +191,4 @@ body {
 
 .file-tab:hover {
     background-color: #d0d0d0;
-}
-.folder img, .file img {
-    width: 16px;  /* Устанавливаем размер иконки меньше */
-    height: 16px; /* Устанавливаем высоту иконки */
-    margin-right: 5px;  /* Отступ от текста */
-    object-fit: contain; /* Убедимся, что изображение пропорционально масштабируется */
 }

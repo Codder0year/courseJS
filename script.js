@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Элементы UI, с которыми будем работать
     var uiElements = {
         createFolderButton: document.getElementById("create-folder-button"),
         deleteFolderButton: document.getElementById("delete-folder-button"),
@@ -18,19 +19,23 @@ document.addEventListener("DOMContentLoaded", function () {
     var folderStates = {};
     var projectStructure = loadProjectStructure();
     var activeTabs = {};
+    // Загрузка структуры проекта из localStorage
     function loadProjectStructure() {
         var savedStructure = localStorage.getItem("projectStructure");
         return savedStructure ? JSON.parse(savedStructure) : {};
     }
+    // Сохранение структуры проекта в localStorage
     function saveProjectStructure() {
         localStorage.setItem("projectStructure", JSON.stringify(projectStructure));
     }
+    // Обновление отображения структуры проекта в сайдбаре
     function updateFolderStructure() {
         if (uiElements.sidebar) {
             uiElements.sidebar.innerHTML = "<h3>Структура проекта</h3>";
             renderFolder(projectStructure, uiElements.sidebar);
         }
     }
+    // Рендер папок и файлов в интерфейсе
     function renderFolder(structure, parentElement, path) {
         if (path === void 0) { path = ""; }
         Object.keys(structure).forEach(function (name) {
@@ -44,13 +49,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    // Рендер файлов
     function renderFileItem(fullPath, name, content, parentElement) {
         var fileElement = createFileElement(name, fullPath, content);
         parentElement.appendChild(fileElement);
     }
+    // Проверка, является ли элемент папкой
     function isFolder(item) {
         return typeof item === "object" && !item.content;
     }
+    // Рендер папок
     function renderFolderItem(fullPath, name, item, parentElement) {
         var folderElement = createFolderElement(name, fullPath, item); // Передаем item сюда
         var childrenContainer = createChildrenContainer(fullPath);
@@ -68,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Проверяем, есть ли у папки дочерние элементы
         return Object.keys(item).length === 0;
     }
+    // Создание элемента папки
     function createFolderElement(name, fullPath, item) {
         var folderElement = document.createElement("div");
         folderElement.classList.add("folder");
@@ -82,12 +91,14 @@ document.addEventListener("DOMContentLoaded", function () {
         folderElement.style.marginLeft = "".concat(fullPath.split("/").length * 20, "px");
         return folderElement;
     }
+    // Создание контейнера для дочерних элементов папки
     function createChildrenContainer(fullPath) {
         var container = document.createElement("div");
         container.classList.add("children-container");
         container.style.display = folderStates[fullPath] === "open" ? "block" : "none";
         return container;
     }
+    // Создание элемента файла
     function createFileElement(name, fullPath, content) {
         var _a;
         var fileElement = document.createElement("div");
@@ -128,31 +139,43 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         return fileElement;
     }
+    // Функция для переключения состояния папки (открыта/закрыта) и выделения её
     function toggleFolder(path, folderElement, childrenContainer) {
+        // Переключаем состояние папки
         folderStates[path] = folderStates[path] === "open" ? "closed" : "open";
+        // Скрываем или показываем содержимое папки
         childrenContainer.style.display = folderStates[path] === "open" ? "block" : "none";
+        // Выделяем папку
         selectFolder(path, folderElement);
     }
+    // Функция для выделения папки
     function selectFolder(path, element) {
-        deselectFolder();
-        selectedFolder = { name: path, element: element };
-        element.classList.add("selected");
-        closeFile((selectedFile === null || selectedFile === void 0 ? void 0 : selectedFile.path) || "");
+        deselectFolder(); // Снимаем выделение с предыдущей папки
+        selectedFolder = { name: path, element: element }; // Устанавливаем новую выбранную папку
+        element.classList.add("selected"); // Добавляем класс выделения
+        closeFile((selectedFile === null || selectedFile === void 0 ? void 0 : selectedFile.path) || ""); // Закрываем текущий открытый файл
     }
+    // Функция для снятия выделения с папки
     function deselectFolder() {
         if (selectedFolder) {
+            // Убираем класс выделения
             selectedFolder.element.classList.remove("selected");
         }
+        // Обнуляем выбранную папку
         selectedFolder = null;
     }
+    // Функция для переключения между открытым и закрытым файлом
     function toggleFile(path, content) {
         if (selectedFile && selectedFile.path === path) {
+            // Если файл уже открыт, закрываем его
             closeFile((selectedFile === null || selectedFile === void 0 ? void 0 : selectedFile.path) || "");
         }
         else {
+            // Иначе открываем файл
             openFile(path, content);
         }
     }
+    // Функция для открытия файла
     function openFile(path, content) {
         var _a;
         if (activeTabs[path]) {
@@ -162,21 +185,31 @@ document.addEventListener("DOMContentLoaded", function () {
         else {
             // Если вкладка не существует, создаём новую
             var newTab = createFileTab(path, content);
+            // Добавляем вкладку в контейнер
             (_a = uiElements.fileTabContainer) === null || _a === void 0 ? void 0 : _a.appendChild(newTab);
+            // Сохраняем вкладку и её содержимое
             activeTabs[path] = { tabElement: newTab, content: content };
+            // Переключаемся на эту вкладку
             selectTab(newTab);
         }
+        // Устанавливаем выбранный файл
         selectedFile = { path: path, content: content, tabElement: activeTabs[path].tabElement };
         if (uiElements.editor) {
+            // Заполняем редактор содержимым файла
             uiElements.editor.value = content;
+            // Обновляем плейсхолдер редактора
             uiElements.editor.placeholder = "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435: ".concat(path);
+            // Показываем редактор
             uiElements.editor.style.display = "block";
         }
         if (uiElements.saveButton) {
+            // Показываем кнопку сохранения
             uiElements.saveButton.style.display = "block";
+            // Разблокируем кнопку
             uiElements.saveButton.disabled = false;
         }
     }
+    // Функция для закрытия файла
     function closeFile(path) {
         if (!path)
             return; // Если путь не передан, выходим из функции
@@ -184,23 +217,29 @@ document.addEventListener("DOMContentLoaded", function () {
         if (tabData) {
             // Удаляем вкладку
             tabData.tabElement.remove();
+            // Удаляем вкладку из активных
             delete activeTabs[path];
             if (selectedFile && selectedFile.path === path) {
+                // Если это был выбранный файл, обнуляем его
                 selectedFile = null;
             }
             if (uiElements.editor) {
+                // Скрываем редактор
                 uiElements.editor.style.display = "none";
             }
             if (uiElements.saveButton) {
+                // Скрываем кнопку сохранения
                 uiElements.saveButton.style.display = "none";
             }
         }
     }
+    // Функция для создания вкладки для файла
     function createFileTab(path, content) {
         var tab = document.createElement("div");
         tab.classList.add("file-tab");
         // Добавляем название файла
         var tabName = document.createElement("span");
+        // Отображаем имя файла
         tabName.textContent = path.split("/").pop() || "Неизвестный файл";
         tab.appendChild(tabName);
         // Добавляем крестик для закрытия вкладки
@@ -223,11 +262,14 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         return tab;
     }
+    // Функция для выделения вкладки
     function selectTab(tab) {
         var _a, _b;
         var tabs = (_a = uiElements.fileTabContainer) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".file-tab");
         if (tabs) {
+            // Убираем выделение с всех вкладок
             tabs.forEach(function (tabElement) { return tabElement.classList.remove("active"); });
+            // Добавляем выделение на текущую вкладку
             tab.classList.add("active");
             // Открываем файл в редакторе
             var filePath_1 = (_b = tab.textContent) === null || _b === void 0 ? void 0 : _b.trim();
@@ -238,33 +280,35 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+    // Обработчик клика вне панели для снятия выделения с папки
     document.addEventListener("click", function (event) {
         var target = event.target;
         if (target && !target.closest("#sidebar") && !target.closest(".folder") && !target.closest(".toolbar-button") && !target.closest("#input-file")) {
-            deselectFolder();
+            deselectFolder(); // Снимаем выделение с папки
         }
     });
-    if (uiElements.saveButton) {
+    if (uiElements.saveButton) { // Слушаем клик на кнопке "сохранить"
         uiElements.saveButton.addEventListener("click", handleSaveFile);
     }
-    if (uiElements.createFolderButton) {
+    if (uiElements.createFolderButton) { // Слушаем клик на кнопке "создать папку"
         uiElements.createFolderButton.addEventListener("click", handleCreateFolder);
     }
-    if (uiElements.deleteFolderButton) {
+    if (uiElements.deleteFolderButton) { // Слушаем клик на кнопке "удалить папку"
         uiElements.deleteFolderButton.addEventListener("click", handleDeleteFolder);
     }
-    if (uiElements.uploadFileButton) {
+    if (uiElements.uploadFileButton) { // Слушаем клик на кнопке "загрузить файл"
         uiElements.uploadFileButton.addEventListener("click", handleUploadFile);
     }
-    if (uiElements.deleteFileButton) {
+    if (uiElements.deleteFileButton) { // Слушаем клик на кнопке "удалить файл"
         uiElements.deleteFileButton.addEventListener("click", handleDeleteFile);
     }
-    if (uiElements.downloadFileButton) {
+    if (uiElements.downloadFileButton) { // Слушаем клик на кнопке "скачать файл"
         uiElements.downloadFileButton.addEventListener("click", handleDownloadFile);
     }
-    if (uiElements.renameButton) {
+    if (uiElements.renameButton) { // Слушаем клик на кнопке "переименовать"
         uiElements.renameButton.addEventListener("click", handleRenameItem);
     }
+    // Сохраняет изменения в файле и обновляет структуру проекта.
     function handleSaveFile() {
         var _a;
         if (selectedFile) {
@@ -277,6 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateFolderStructure();
         }
     }
+    // Обработчик для создания новой папки
     function handleCreateFolder() {
         var folderName = prompt("Введите имя новой папки:");
         if (!folderName)
@@ -297,6 +342,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Папка с таким именем уже существует!");
         }
     }
+    // Позволяет получать родительскую папку
+    //  для любого файла по его пути в структуре.
     function getParentFolder(path) {
         var pathParts = path.split("/");
         var name = pathParts.pop() || "";
@@ -306,6 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return { parent: parent, name: name };
     }
+    // Обработчик для удаления папки
     function handleDeleteFolder() {
         if (selectedFolder) {
             var confirmDelete = confirm("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \"".concat(selectedFolder.name, "\" \u0438 \u0432\u0441\u0435 \u0435\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435?"));
@@ -321,6 +369,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Пожалуйста, выберите папку для удаления.");
         }
     }
+    // Обработчик для загрузки файла
     function handleUploadFile(event) {
         var _a;
         event.stopPropagation();
@@ -331,6 +380,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Выберите папку для загрузки файла.");
         }
     }
+    // Обработчик для загрузки файла после выбора
     if (uiElements.inputFile) {
         uiElements.inputFile.addEventListener("change", handleFileUpload);
     }
@@ -376,6 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Файл не выбран или папка не выбрана.");
         }
     }
+    // Обработчик для удаления файла
     function handleDeleteFile() {
         if (selectedFile) {
             var confirmDelete = confirm("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0444\u0430\u0439\u043B \"".concat(selectedFile.path.split("/").pop(), "\"?"));
@@ -391,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Выберите файл для удаления.");
         }
     }
+    // Обработчик для скачивания файла
     function handleDownloadFile() {
         if (selectedFile) {
             var blob = new Blob([selectedFile.content], { type: "text/plain" });
@@ -403,6 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Выберите файл для скачивания.");
         }
     }
+    // Обработчик для переименования элемента (папки или файла)
     function handleRenameItem() {
         if (selectedFile) {
             var newName = prompt("Введите новое имя файла:", selectedFile.path.split("/").pop());
