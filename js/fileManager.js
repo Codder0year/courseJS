@@ -1,103 +1,49 @@
-// Содержимое файлов
-const fileContent = {
-  "File1.cs": "// C# file content",
-  "File2.xaml": "<!-- XAML content -->",
-  "MainWindow.cs": "// MainWindow.cs content",
-  "MainWindow.xaml": "<!-- MainWindow.xaml content -->",
-};
-
-// Текущий открытый файл
-let currentFile = null;
-
-// Открытие файла для редактирования
-function openFile(fileName) {
-  const editor = document.getElementById("editor");
-  const saveButton = document.getElementById("save-button");
-
-  if (fileContent[fileName]) {
-    currentFile = fileName;
-    editor.value = fileContent[fileName]; // Загружаем содержимое файла
-    editor.style.display = "block"; // Показываем редактор
-    saveButton.removeAttribute("disabled");
-    saveButton.style.display = "block"; // Показываем кнопку "Сохранить"
-  } else {
-    currentFile = null;
-    editor.value = "";
-    editor.style.display = "none"; // Скрываем редактор
-    saveButton.setAttribute("disabled", "true");
-    saveButton.style.display = "none"; // Скрываем кнопку "Сохранить"
-  }
-
-  addTab(fileName);
-}
-
-// Сохранение изменений в файл
-function saveFileContent() {
-  if (currentFile) {
-    const editor = document.getElementById("editor");
-    fileContent[currentFile] = editor.value; // Сохраняем изменения
-    alert(`Изменения в файле "${currentFile}" сохранены!`);
-  }
-}
-
-// Добавление вкладки
-function addTab(fileName) {
-  const tabs = document.getElementById("tabs");
-
-  // Проверяем, есть ли уже вкладка с таким именем
-  const existingTab = Array.from(tabs.children).find((tab) =>
-    tab.textContent.includes(fileName)
-  );
-  if (!existingTab) {
-    const newTab = document.createElement("div");
-    newTab.className = "tab";
-    newTab.textContent = fileName;
-
-    // Кнопка закрытия вкладки
-    const closeButton = document.createElement("span");
-    closeButton.className = "close-button";
-    closeButton.textContent = "×";
-    closeButton.onclick = function (event) {
-      event.stopPropagation();
-      closeTab(newTab);
-    };
-
-    newTab.appendChild(closeButton);
-
-    tabs.appendChild(newTab);
-
-    // Убираем класс active с других вкладок
-    Array.from(tabs.children).forEach((tab) => tab.classList.remove("active"));
-    newTab.classList.add("active");
-  }
-}
-
-// Закрытие вкладки
-function closeTab(tab) {
-  const tabs = document.getElementById("tabs");
-  tabs.removeChild(tab);
-
-  // Если удаляется активная вкладка, делаем активной первую из оставшихся
-  if (tab.classList.contains("active")) {
-    const remainingTabs = Array.from(tabs.children);
-    if (remainingTabs.length > 0) {
-      const nextTab = remainingTabs[0];
-      nextTab.classList.add("active");
-      openFile(nextTab.textContent.trim());
-    } else {
-      const editor = document.getElementById("editor");
-      const saveButton = document.getElementById("save-button");
-      editor.value = "";
-      editor.style.display = "none"; // Скрываем редактор
-      saveButton.setAttribute("disabled", "true");
-      saveButton.style.display = "none"; // Скрываем кнопку "Сохранить"
+// Управление структурой файлов.
+class FileManager {
+    constructor() {
+        // Инициализация структуры проекта, выбранных папок и файлов, состояний папок и вкладок.
+        this.projectStructure = this.loadProjectStructure(); // Загружаем структуру проекта из localStorage.
+        this.selectedFolder = null; // Выбранная папка.
+        this.selectedFile = null; // Выбранный файл.
+        this.folderStates = {}; // Состояния папок (открыты или закрыты).
+        this.activeTabs = {}; // Активные вкладки (открытые файлы).
     }
-  }
-}
 
-// Привязываем события
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .getElementById("save-button")
-    .addEventListener("click", saveFileContent);
-});
+    // Метод для загрузки структуры проекта из localStorage.
+    loadProjectStructure() {
+        let savedStructure = localStorage.getItem("projectStructure");
+        // Если структура сохранена, парсим её, иначе возвращаем пустой объект.
+        return savedStructure ? JSON.parse(savedStructure) : {};
+    }
+
+    // Метод для сохранения структуры проекта в localStorage.
+    saveProjectStructure() {
+        // Преобразуем структуру проекта в строку JSON и сохраняем в localStorage.
+        localStorage.setItem("projectStructure", JSON.stringify(this.projectStructure));
+    }
+
+    // Метод для получения родительской папки по пути.
+    getParentFolder(path) {
+        let pathParts = path.split("/"); // Разбиваем путь на части (папки).
+        let name = pathParts.pop() || ""; // Имя последней папки или файла.
+        let parent = this.projectStructure; // Начинаем с корня проекта.
+        
+        // Проходим по всем частям пути и идем по структуре проекта.
+        pathParts.forEach(function (part) {
+            parent = parent[part]; // Переход к следующей папке.
+        });
+
+        // Возвращаем родительскую папку и имя последней части пути.
+        return { parent: parent, name: name };
+    }
+
+    // Метод для проверки, является ли элемент папкой.
+    isFolder(item) {
+        return typeof item === "object" && !item.content; // Если это объект и нет контента, то это папка.
+    }
+
+    // Метод для проверки, пуста ли папка.
+    isFolderEmpty(item) {
+        return Object.keys(item).length === 0; // Если в папке нет элементов, она пуста.
+    }
+}
